@@ -1,11 +1,12 @@
 #import <React/RCTBridgeModule.h>
 
-#ifdef __cplusplus
+@interface JsiPromise : NSObject <RCTBridgeModule>;
 
-#import "react-native-jsi-promise.h"
+@property (nonatomic, assign) BOOL setBridgeOnMainQueue;
 
-#endif
-
-@interface JsiPromise : NSObject <RCTBridgeModule>
 
 @end
+
+
+
+
