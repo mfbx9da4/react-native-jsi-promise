@@ -34,8 +34,7 @@ function FastExample() {
       style={styles.fast}
       onPress={() => {
         const start = performance.now();
-        const res = jsiPromise.pointerToReturnedValue();
-        observeProperty(res, 'result', newVal => {
+        const res = jsiPromise.foo(newVal => {
           setState({took: performance.now() - start, result: {...res}});
         });
       }}>
@@ -57,8 +56,7 @@ function SlowExample() {
         const start = performance.now();
 
         const res = await new Promise(resolve => {
-          const r = jsiPromise.pointerToReturnedValue();
-          observeProperty(r, 'result', newVal => {
+          const r = jsiPromise.foo(newVal => {
             resolve(r);
           });
         });
