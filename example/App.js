@@ -33,9 +33,9 @@ function FastExample() {
     <TouchableOpacity
       style={styles.fast}
       onPress={() => {
-        const start = performance.now();
+        const start = global.performance.now();
         const res = jsiPromise.foo(newVal => {
-          setState({took: performance.now() - start, result: {...res}});
+          setState({took: global.performance.now() - start, result: {...res}});
         });
       }}>
       <Text>
@@ -53,15 +53,13 @@ function SlowExample() {
     <TouchableOpacity
       style={styles.slow}
       onPress={async () => {
-        const start = performance.now();
-
+        const start = global.performance.now();
         const res = await new Promise(resolve => {
           const r = jsiPromise.foo(newVal => {
             resolve(r);
           });
         });
-
-        setState({took: performance.now() - start, result: {...res}});
+        setState({took: global.performance.now() - start, result: {...res}});
       }}>
       <Text>
         {'Tap me, will sometimes be slow: \n'}
