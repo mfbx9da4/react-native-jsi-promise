@@ -35,7 +35,7 @@ RCT_EXPORT_MODULE()
 static void install(jsi::Runtime &jsiRuntime, JsiPromise *cryptoPp) {
 
     auto myqueue = dispatch_queue_create("myqueue", DISPATCH_QUEUE_CONCURRENT);
-    
+
     auto promiseResolver = jsi::Function::createFromHostFunction(
         jsiRuntime,
         jsi::PropNameID::forAscii(jsiRuntime, "promiseResolver"),
@@ -109,29 +109,29 @@ static void install(jsi::Runtime &jsiRuntime, JsiPromise *cryptoPp) {
         }
     );
     jsiRuntime.global().setProperty(jsiRuntime, "pointerToPromiseResolver", std::move(pointerToPromiseResolver));
-    
+
     auto pointerToReturnedValue = jsi::Function::createFromHostFunction(
         jsiRuntime,
         jsi::PropNameID::forAscii(jsiRuntime, "pointerToReturnedValue"),
         1,
         [cryptoPp, myqueue](jsi::Runtime& runtime, const jsi::Value& thisValue, const jsi::Value* arguments, size_t count) -> jsi::Value {
-            
+
             auto myObj = jsi::Object(runtime);
             jsi::Value obj = jsi::Value(runtime, myObj);
             auto myObjRef = std::make_shared<jsi::Value>(obj.asObject(runtime));
-            
-            
+
+
             dispatch_async(myqueue, ^(void){
                 auto myVal = jsi::Value(runtime, jsi::String::createFromUtf8(runtime, std::to_string(std::rand())));
                 myObjRef->asObject(runtime).setProperty(runtime, "result", myVal);
             });
-            
+
             return obj;
         }
     );
     jsiRuntime.global().setProperty(jsiRuntime, "pointerToReturnedValue", std::move(pointerToReturnedValue));
-    
-    
+
+
     auto foo = jsi::Function::createFromHostFunction(
         jsiRuntime,
         jsi::PropNameID::forAscii(jsiRuntime, "foo"),
@@ -141,8 +141,9 @@ static void install(jsi::Runtime &jsiRuntime, JsiPromise *cryptoPp) {
             auto userCallbackRef = std::make_shared<jsi::Object>(arguments[0].getObject(runtime));
 
             dispatch_async(myqueue, ^(void){
-                auto myVal = jsi::Value(runtime, jsi::String::createFromUtf8(runtime, std::to_string(std::rand())));
-                userCallbackRef->asFunction(runtime).call(runtime, myVal);
+                auto val = jsi::String::createFromUtf8(runtime, std::to_string(std::rand()));
+                auto error = jsi::Value::undefined();
+                userCallbackRef->asFunction(runtime).call(runtime, error, val);
             });
 
             return jsi::Value::undefined();

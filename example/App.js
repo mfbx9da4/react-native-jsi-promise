@@ -34,7 +34,10 @@ function FastExample() {
       style={styles.fast}
       onPress={() => {
         const start = global.performance.now();
-        jsiPromise.foo(x => {
+        jsiPromise.foo((err, x) => {
+          if (err) {
+            throw err;
+          }
           setState({took: global.performance.now() - start, result: x});
         });
       }}>
@@ -54,8 +57,8 @@ function SlowExample() {
       style={styles.slow}
       onPress={async () => {
         const start = global.performance.now();
-        const result = await new Promise(resolve => {
-          jsiPromise.foo(x => resolve(x));
+        const result = await new Promise((resolve, reject) => {
+          jsiPromise.foo((err, x) => (err ? reject(err) : resolve(x)));
         });
         setState({took: global.performance.now() - start, result});
       }}>
