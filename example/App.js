@@ -34,8 +34,8 @@ function FastExample() {
       style={styles.fast}
       onPress={() => {
         const start = global.performance.now();
-        const res = jsiPromise.foo(newVal => {
-          setState({took: global.performance.now() - start, result: {...res}});
+        jsiPromise.foo(x => {
+          setState({took: global.performance.now() - start, result: x});
         });
       }}>
       <Text>
@@ -54,12 +54,10 @@ function SlowExample() {
       style={styles.slow}
       onPress={async () => {
         const start = global.performance.now();
-        const res = await new Promise(resolve => {
-          const r = jsiPromise.foo(newVal => {
-            resolve(r);
-          });
+        const result = await new Promise(resolve => {
+          jsiPromise.foo(x => resolve(x));
         });
-        setState({took: global.performance.now() - start, result: {...res}});
+        setState({took: global.performance.now() - start, result});
       }}>
       <Text>
         {'Tap me, will sometimes be slow: \n'}
