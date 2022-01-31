@@ -26,6 +26,23 @@ export function observeProperty(obj, property, onChanged, customDescriptor) {
   );
 }
 
+async function main() {
+  for (let i = 0; i < 10; i++) {
+    const start = Date.now();
+    const p = new Promise(r => {
+      jsiPromise.foo((err, x) => {
+        console.log(i, 'err, x', err, x, Date.now() - start);
+        r(x);
+      });
+    });
+    await p;
+  }
+}
+
+main()
+  .then(console.log.bind(null, '[main]'))
+  .catch(console.error.bind(null, '[main]'));
+
 function FastExample() {
   const [state, setState] = React.useState({took: 0, result: 'initial'});
 
